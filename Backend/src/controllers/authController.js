@@ -8,7 +8,7 @@ async function register(req,res) {
             return errorResponse(res,400,"Username, email and password is required.")
         }
 
-        const user = await registerUser({username,email,password})
+        const user = await registerUser({ username,email,password })
         return res.status(201).json({success:true, user})
     } catch (error) {
         return errorResponse(res,error.status || 500, error.message || "Regsitration Failed.")

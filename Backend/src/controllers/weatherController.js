@@ -1,5 +1,6 @@
 const errorResponse = require("../utils/errorResponse")
 const { getWeatherInfo } = require("../services/weatherService")
+const { saveSearch, getSearchHistoryByUser } = require("../services/searchService")
 
 async function getWeather(req,res) {
     try {
@@ -15,9 +16,13 @@ async function getWeather(req,res) {
 
         const result = await getWeatherInfo(city,apikey);
         if(req.user && req.user.id){
-            const {savesearch} = require("../services/searchService")
-            savesearch({userId: req.user.id,city,result}).catch(err => console.log("Save search failed",err));
+            try {
+                await saveSearch({ userId: req.user.id, city, result })
+            } catch (error) {
+                console.error("Failed to save search history",error)
+            }
         }
+        console.log("req.user =", req.user)
         return res.json(result);
 
     } catch (error) {
@@ -30,4 +35,18 @@ async function getWeather(req,res) {
     }
 }
 
-module.exports = { getWeather };
+
+async function getHistory(req,res) {
+    try {
+        const userId = req.user && req.user.id
+        if(!userId) return errorResponse(res, 401, "Unauthorized")
+
+        const limit = Math.min(parseInt(req.query.limit || "50",10) || 50, 200)
+        const rows = await getSearchHistoryByUser(userId, limit);
+        return res.json({ success: true, data: rows });
+    } catch (error) {
+        console.error("Get history error: ", error);
+        return errorResponse(res,500,"Failed to fetch history.");
+    }
+}
+module.exports = { getWeather, getHistory};

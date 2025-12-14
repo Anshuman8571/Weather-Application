@@ -67,7 +67,7 @@ async function loginUser({ email,password }){
         throw err;
     }
 
-    const payload = {userId: user.id, email:user.email}
+    const payload = { userId: user.id, email:user.email }
     const token = jwt.sign(payload,JWT_SECRET,{expiresIn:JWT_EXPIRES_IN})
 
     return {token, expiresIn:JWT_EXPIRES_IN, user:{id:user.id, username:user.username, email:user.email}}
