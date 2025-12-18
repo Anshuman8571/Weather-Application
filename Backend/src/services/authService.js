@@ -16,7 +16,7 @@ async function findUserByEmail(email) {
     const q = `SELECT id, username, email, password_hash FROM users WHERE email = $1 LIMIT 1`;
     const { rows } = await db.query(q, [email]);
     return rows[0] || null;
-}
+} 
 
 async function findUserById(id) {
     const q = `SELECT id, username, email FROM users WHERE id = $1 LIMIT 1`;
@@ -69,7 +69,7 @@ async function loginUser({ email,password }){
 
     const payload = { userId: user.id, email:user.email }
     const token = jwt.sign(payload,JWT_SECRET,{expiresIn:JWT_EXPIRES_IN})
-
+    console.log(`🧨🧨UserId:${user.id}`)
     return {token, expiresIn:JWT_EXPIRES_IN, user:{id:user.id, username:user.username, email:user.email}}
 }
 
