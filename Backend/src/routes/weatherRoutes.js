@@ -5,7 +5,7 @@ const { weatherQueryschema } = require("../validators/weatherValidator");
 const authMiddleware = require("../midleware/authMiddleware")
 const router = express.Router();
 
-router.get("/weather",validateRequest(weatherQueryschema,"query"),getWeather);
+router.get("/weather",authMiddleware, validateRequest(weatherQueryschema,"query"),getWeather);
 router.get("/weather/forecast", authMiddleware, validateRequest(weatherQueryschema,"query"),getForecastWeather)
 router.get("/history", authMiddleware, getHistory)
 module.exports = router

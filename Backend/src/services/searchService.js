@@ -10,9 +10,9 @@ async function saveSearch({userId, city, result}){
     return rows[0];
 }
 
-async function getSearchHistoryByUser(userId, limit = 50) {
-    const q = `SELECT id, city, result, created_at FROM search_history WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2`
-    const { rows } = await db.query(q, [userId,limit]);
+async function getSearchHistoryByUser(userId, limit = 5,offset = 0) {
+    const q = `SELECT id, city, result, created_at FROM search_history WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3`
+    const { rows } = await db.query(q, [userId,limit,offset]);
     return rows.map(r => ({
         id: r.id,
         city: r.city,

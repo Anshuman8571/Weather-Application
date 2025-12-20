@@ -1,29 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./auth/AuthContext";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
-import { BrowserRouter, Routes, Route, Router } from 'react-router-dom'
-import { AuthProvider } from '../auth/AuthContext'
-import ProtectedRoute from './auth/Protected'
-
-import Login from "./pages/Login"
-import Register from "./pages/Register"
-import Weather from "./pages/Weather"
-import Forecast from "./pages/Forecast"
-import History from "./pages/History"
+import Login from "./pages/Login";
+// import Register from "./pages/Register";
+import Weather from "./pages/Weather";
+import Forecast from "./pages/Forecast";
+import History from "./pages/History";
+import Navbar from "./pages/Navbar";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <AuthProvider>
       <BrowserRouter>
+        <Navbar/>
         <Routes>
-          <Route path="/login" element={<Login /> }/>
-          <Route path="/register" element={<Register /> }/>
-          
-          <Router
+          {/* 👇 Redirect root to login */}
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={<Login />} />
+          {/* <Route path="/register" element={<Register />} /> */}
+
+          <Route
             path="/weather"
             element={
               <ProtectedRoute>
@@ -32,7 +29,7 @@ function App() {
             }
           />
 
-          <Router
+          <Route
             path="/forecast"
             element={
               <ProtectedRoute>
@@ -41,7 +38,7 @@ function App() {
             }
           />
 
-          <Router
+          <Route
             path="/history"
             element={
               <ProtectedRoute>
@@ -49,11 +46,10 @@ function App() {
               </ProtectedRoute>
             }
           />
-
         </Routes>
       </BrowserRouter>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;

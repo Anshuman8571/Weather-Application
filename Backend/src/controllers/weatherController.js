@@ -39,9 +39,10 @@ async function getHistory(req,res) {
     try {
         const userId = req.user && req.user.id
         if(!userId) return errorResponse(res, 401, "Unauthorized")
-
-        const limit = Math.min(parseInt(req.query.limit || "50",10) || 50, 200)
-        const rows = await getSearchHistoryByUser(userId, limit);
+        const page = parseInt(req.query.page || "1", 10)
+        const limit = Math.min(parseInt(req.query.limit || "5",10), 200);
+        const offset = (page - 1) * limit; // Here offset means how many entries we need to skip like in starting 0 entry will be skipped so first 5 entries will be shown and then 5 entries will be skipped so the next 5 entries will be shown.
+        const rows = await getSearchHistoryByUser(userId, limit, offset); 
         return res.json({ success: true, data: rows });
     } catch (error) {
         console.error("Get history error: ", error);
